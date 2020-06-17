@@ -1,0 +1,17 @@
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.deps.json
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.pdb
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Application.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Domain.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.Data.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.Logging.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Application.pdb
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Domain.pdb
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.Logging.pdb
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\bin\Debug\netcoreapp3.1\Sample.Infra.Data.pdb
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.csprojAssemblyReference.cache
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.AssemblyInfoInputs.cache
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.AssemblyInfo.cs
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.csproj.CopyComplete
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.dll
+E:\Sites\booking - Copia\Server\Infra\Sample.Infra.CrossCutting\obj\Debug\netcoreapp3.1\Sample.Infra.CrossCutting.pdb

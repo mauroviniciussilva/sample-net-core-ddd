@@ -1,0 +1,11 @@
+E:\Sites\booking - Copia\Server\Application\Sample.Application\bin\Debug\netcoreapp3.1\Sample.Application.deps.json
+E:\Sites\booking - Copia\Server\Application\Sample.Application\bin\Debug\netcoreapp3.1\Sample.Application.dll
+E:\Sites\booking - Copia\Server\Application\Sample.Application\bin\Debug\netcoreapp3.1\Sample.Application.pdb
+E:\Sites\booking - Copia\Server\Application\Sample.Application\bin\Debug\netcoreapp3.1\Sample.Domain.dll
+E:\Sites\booking - Copia\Server\Application\Sample.Application\bin\Debug\netcoreapp3.1\Sample.Domain.pdb
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.csprojAssemblyReference.cache
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.AssemblyInfoInputs.cache
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.AssemblyInfo.cs
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.csproj.CopyComplete
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.dll
+E:\Sites\booking - Copia\Server\Application\Sample.Application\obj\Debug\netcoreapp3.1\Sample.Application.pdb

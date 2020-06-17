@@ -1,0 +1,16 @@
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.deps.json
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.dll
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.pdb
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.csprojAssemblyReference.cache
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.AssemblyInfoInputs.cache
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.AssemblyInfo.cs
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.dll
+C:\Projetos\booking\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.pdb
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.deps.json
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.dll
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\bin\Debug\netcoreapp3.1\Booking.Infra.Logging.pdb
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.csprojAssemblyReference.cache
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.AssemblyInfoInputs.cache
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.AssemblyInfo.cs
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.dll
+E:\Sites\booking - Copia\Server\Infra\Booking.Infra.Logging\obj\Debug\netcoreapp3.1\Booking.Infra.Logging.pdb
