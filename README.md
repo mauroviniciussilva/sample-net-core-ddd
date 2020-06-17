@@ -4,7 +4,7 @@ First of all, as you must know, DDD is not an architecture. DDD (Domain Driven D
 
 ## The Architeture
 
-![Architeture of the project](docs/Project_Architeture.png)
+![Architeture of the project](docs/Project_Architeture.PNG)
 
 - Application layer: responsible for the main project, as this is where API controllers and services will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action. It has references from the Service and Domain layers.
 - Domain layer: responsible for implementing classes and models, which will be mapped to the database, in addition to obtaining declarations of interfaces, constants, DTOs (Data Transfer Object) and enums.
