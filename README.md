@@ -29,7 +29,7 @@ To compile the solution, SDK 3.1 must be installed on the machine. If you don't 
 
 In this project I am using SQLServer. Therefore, to run the project in your local environment, it is necessary to have installed some version of SQLServer, which you can find on the page: [SQL Server download](https://www.microsoft.com/en-us/sql-server/sql-server-downloads). I left a folder inside the project where you can place the migrates as you build the application. There you will find the first script, the one for creating the database.
 
-- sample-net-core-ddd\4 - Infra\Sample.Infra.Data\Migrate
+- sample-net-core-ddd\Sample.Infra\Sample.Infra.Data\Migrate
 
 ## How to run the application
 
