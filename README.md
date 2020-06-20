@@ -6,16 +6,14 @@ First of all, as you must know, DDD is not an architecture. DDD (Domain Driven D
 
 ![Architeture of the project](docs/Project_Architeture.PNG)
 
-- Application layer: responsible for the main project, as this is where API controllers and services will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action. It has references from the Service and Domain layers.
+- Application layer: responsible for the main project, as this is where API controllers and services will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action.
+- Background: responsible for the background jobs and processing, where you can program tasks to execute in a time interval or even integrate with a message-broker.
 - Domain layer: responsible for implementing classes and models, which will be mapped to the database, in addition to obtaining declarations of interfaces, constants, DTOs (Data Transfer Object) and enums.
-- Service layer: it would be the “heart” of the project, as it is where all business rules and validations are made, before data persist in the database. 
-It has references from the Domain, Infra.Data and Infra.CrossCutting layers.
 - Infrastructure layer: divided into three sub-layers
     - Data: performs the persistence with the database.
     - Cross-Cutting: a separate layer that does not obey the layer hierarchy. As its name says, this layer crosses the entire hierarchy. It contains the functionalities that can be used in any part of the code, such as documents validation, consumption of external API and use of some security.
     - Logging: responsible to make logs to the application.
-It has references from the Domain layer.
-- Background: responsible for the background jobs and processing, where you can program tasks to execute in a time interval or even integrate with a message-broker.
+- Service layer: it would be the “heart” of the project, as it is where all business rules and validations are made, before data persist in the database.
 
 ## Generic Classes
 
