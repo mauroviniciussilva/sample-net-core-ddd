@@ -4,6 +4,8 @@ using Sample.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Sample.Infra.Data.Repositories
 {
@@ -45,23 +47,16 @@ namespace Sample.Infra.Data.Repositories
         }
 
         /// <summary>
-        /// Delete an entity based on its id
-        /// </summary>
-        /// <param name="id">Id</param>
-        public virtual void DeleteById(int id)
-        {
-            TEntity entity = GetById(id);
-            DbSet.Remove(entity);
-        }
-
-        /// <summary>
         /// Inactive an entity based on its id
         /// </summary>
-        /// <param name="id">Id</param>
-        public void Inactivate(int id)
+        /// <param name="id">Entity's Id</param>
+        /// <param name="loggedUserId">Logged In User Id</param>
+        public void Inactivate(int id, int loggedUserId)
         {
             TEntity entity = GetById(id);
             entity.Active = false;
+            entity.UserModificationId = loggedUserId;
+            entity.ModificationDate = DateTime.Now;
             DbSet.Update(entity);
         }
 
@@ -71,7 +66,7 @@ namespace Sample.Infra.Data.Repositories
         /// <returns>List of Entities</returns>
         public virtual IQueryable<TEntity> GetAll()
         {
-            return Context.Set<TEntity>();
+            return Context.Set<TEntity>().Where(x => x.Active);
         }
 
         /// <summary>
@@ -81,7 +76,7 @@ namespace Sample.Infra.Data.Repositories
         /// <returns>Entity</returns>
         public virtual TEntity GetById(int id)
         {
-            return Context.Set<TEntity>().Find(id);
+            return Context.Set<TEntity>().FirstOrDefault(x => x.Id == id && x.Active);
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Sample.Infra.Data.Repositories
         /// <returns></returns>
         public virtual TEntity GetByIdWithInclude(int id, string include)
         {
-            return Context.Set<TEntity>().Include(include).FirstOrDefault(p => p.Id == id);
+            return Context.Set<TEntity>().Include(include).FirstOrDefault(x => x.Id == id);
         }
 
         /// <summary>

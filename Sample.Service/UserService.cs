@@ -29,7 +29,7 @@ namespace Sample.Service
         /// Add a new user to the database
         /// </summary>
         /// <param name="entity">User</param>
-        /// <returns>Entity</returns>
+        /// <returns>User</returns>
         public override User Add(User entity)
         {
             if (GetByLogin(entity.Login) != null)
@@ -38,6 +38,23 @@ namespace Sample.Service
             }
 
             return base.Add(entity);
+        }
+
+        /// <summary>
+        /// Update user on the database
+        /// </summary>
+        /// <param name="entity">User</param>
+        /// <returns>User</returns>
+        public override User Update(User entity)
+        {
+            var loginUser = GetByLogin(entity.Login);
+
+            if (loginUser != null && loginUser.Id != entity.Id)
+            {
+                throw new DomainException(nameof(UserService), nameof(Update), "Login is in use by another user");
+            }
+
+            return base.Update(entity);
         }
 
         /// <summary>

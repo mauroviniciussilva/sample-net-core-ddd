@@ -17,7 +17,7 @@ namespace Sample.Infra.Data.Repository
         /// <returns>User</returns>
         public User GetByLogin(string login)
         {
-            return DbSet.FirstOrDefault(p => p.Login == login);
+            return DbSet.FirstOrDefault(u => u.Login == login && u.Active);
         }
     }
 }

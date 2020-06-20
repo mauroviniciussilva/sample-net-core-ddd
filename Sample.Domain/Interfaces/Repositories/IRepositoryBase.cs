@@ -17,15 +17,10 @@ namespace Sample.Domain.Interfaces.Repositories
         /// <returns>Entity</returns>
         TEntity Add(TEntity entity);
         /// <summary>
-        /// Delete an entity based on its id
-        /// </summary>
-        /// <param name="id">Id</param>
-        void DeleteById(int id);
-        /// <summary>
         /// Inactive an entity based on its id
         /// </summary>
         /// <param name="id">Id</param>
-        void Inactivate(int id);
+        void Inactivate(int id, int loggedUserId);
         /// <summary>
         /// Returns all the registries from the database
         /// </summary>

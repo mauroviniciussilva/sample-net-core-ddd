@@ -22,8 +22,6 @@ namespace Sample.Infra.Data.Mapping
                 entity.Property(e => e.CreationDate).IsRequired().HasColumnType("DateTime");
                 entity.Property(e => e.UserModificationId).HasColumnType("Int");
                 entity.Property(e => e.ModificationDate).HasColumnType("DateTime");
-
-                entity.HasQueryFilter(b => EF.Property<bool>(b, "Active") == true);
             });
         }
     }

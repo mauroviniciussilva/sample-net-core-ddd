@@ -24,7 +24,6 @@
             Name = name;
             Login = login;
             Password = password;
-            Active = true;
         }
 
         public override bool IsValid()

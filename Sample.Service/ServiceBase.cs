@@ -57,7 +57,12 @@ namespace Sample.Service
         /// <summary>
         /// Delete an entity based on its id
         /// </summary>
-        /// <param name="id">Id</param>
+        /// <remarks><![CDATA[
+        /// This method only inactivates the record, but database queries return only active records. This was designed 
+        /// in this way to recover a record deleted by accident, for data analysis, among other possibilities
+        /// ]]>
+        /// </remarks>
+        /// <param name="id">Entity's Id</param>
         public void DeleteById(int id)
         {
             if (id == 0)
@@ -67,7 +72,12 @@ namespace Sample.Service
 
             var entity = _repository.GetById(id);
 
-            _repository.Inactivate(id);
+            if (entity == null)
+            {
+                throw new DomainException(nameof(ServiceBase<TEntity>), nameof(DeleteById), "Entity not found", nameof(TEntity));
+            }
+
+            _repository.Inactivate(id, _userHelper.LoggedUser.Id);
 
             _repository.SaveChanges();
         }
@@ -81,7 +91,7 @@ namespace Sample.Service
         /// <summary>
         /// Returns an entity based on its id
         /// </summary>
-        /// <param name="id">Id</param>
+        /// <param name="id">Entity's Id</param>
         /// <returns>Entity</returns>
         public virtual TEntity GetById(int id)
         {
