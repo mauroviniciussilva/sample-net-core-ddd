@@ -31,3 +31,9 @@ In this project I am using MySQL. Therefore, to run the project in your local en
 
 1. Set your connection string (in *appsettings.json*)
 2. Run!
+
+## Testing the Application
+
+It is possible to test the APIs through Postman. I left a collection and an environment, that you can import and test the requests individually, and make your own tests. You will find the files in:
+
+- sample-net-core-ddd\Postman
