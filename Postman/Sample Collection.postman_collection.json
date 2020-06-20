@@ -1,0 +1,542 @@
+{
+	"info": {
+		"_postman_id": "d2d48777-8325-4803-ae63-62cf5224668b",
+		"name": "Sample Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Get Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3f7d1741-48bd-476a-945c-6764e50906fd",
+								"exec": [
+									"pm.environment.set(\"Token\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Login\": \"admin\",\n\t\"Password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlApi}}/User/Login",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User",
+								"Login"
+							]
+						},
+						"description": "The frist request you need to do to save the token and authenticate other requests."
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2c12afe9-9c9f-4778-bb47-003ab2c058d9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebf17b44-bd6e-44cf-a44b-b7e2d3bbf553",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "2. User",
+			"item": [
+				{
+					"name": "Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "14ce956d-9710-4999-8080-b347187afa0e",
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"function findUserByName (name) {",
+									"    return response.find(u => u.name == name);",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Administrator exists!\", function() {",
+									"    let user = findUserByName(\"Administrator\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(1);",
+									"    pm.expect(user.name).to.eql(\"Administrator\");",
+									"    pm.expect(user.login).to.eql(\"admin\");",
+									"    pm.expect(user.typeId).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"Editor exists!\", function() {",
+									"    let user = findUserByName(\"Editor\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(2);",
+									"    pm.expect(user.name).to.eql(\"Editor\");",
+									"    pm.expect(user.login).to.eql(\"editor\");",
+									"    pm.expect(user.typeId).to.eql(2);",
+									"});",
+									"",
+									"pm.test(\"General exists!\", function() {",
+									"    let user = findUserByName(\"General\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(3);",
+									"    pm.expect(user.name).to.eql(\"General\");",
+									"    pm.expect(user.login).to.eql(\"general\");",
+									"    pm.expect(user.typeId).to.eql(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlApi}}/User",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User"
+							]
+						},
+						"description": "A basic get that returns all the users from the database"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "55956ec9-a68e-4c62-8f3a-4cbe20722679",
+								"exec": [
+									"pm.environment.set(\"PostmanUserName\", \"Postman\");",
+									"pm.environment.set(\"PostmanUserLogin\", \"postman\");",
+									"pm.environment.set(\"PostmanUserPassword\", \"password\");",
+									"pm.environment.set(\"PostmanUserTypeId\", 3)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c7e70c4-a21a-45be-b8e3-ee79ffea57bd",
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"let userName = pm.environment.get(\"PostmanUserName\");",
+									"let userLogin = pm.environment.get(\"PostmanUserLogin\");",
+									"let userPassword = pm.environment.get(\"PostmanUserPassword\");",
+									"let userTypeId = pm.environment.get(\"PostmanUserTypeId\");",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"pm.test(`Name = \"${userName}\"`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(`Login = \"${userLogin}\"`, function() {",
+									"    pm.expect(response.login).to.eql(userLogin);",
+									"});",
+									"",
+									"pm.test(`Password = \"${userPassword}\"`, function() {",
+									"    pm.expect(response.password).to.eql(userPassword);",
+									"});",
+									"",
+									"pm.test(`Type Id = ${userTypeId}`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(\"Active = true\", function() {",
+									"    pm.expect(response.active).to.be.true;",
+									"});",
+									"",
+									"pm.environment.set(\"PostmanUserId\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\": \"{{PostmanUserName}}\",\n    \"Login\": \"{{PostmanUserLogin}}\",\n\t\"Password\": \"{{PostmanUserPassword}}\",\n    \"TypeId\": {{PostmanUserTypeId}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlApi}}/User",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User"
+							]
+						},
+						"description": "A basic post to add new users to your database. For this test, I've created a general usertype."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "916f4368-e3de-42e5-a7ff-b5c5318e5563",
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"let userId = pm.environment.get(\"PostmanUserId\");",
+									"let userName = pm.environment.get(\"PostmanUserName\");",
+									"let userLogin = pm.environment.get(\"PostmanUserLogin\");",
+									"let userPassword = pm.environment.get(\"PostmanUserPassword\");",
+									"let userTypeId = pm.environment.get(\"PostmanUserTypeId\");",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(`Id = ${userId}`, function() {",
+									"    pm.expect(response.id).to.eql(userId);",
+									"});",
+									"",
+									"pm.test(`Name = \"${userName}\"`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(`Login = \"${userLogin}\"`, function() {",
+									"    pm.expect(response.login).to.eql(userLogin);",
+									"});",
+									"",
+									"pm.test(`Password = \"${userPassword}\"`, function() {",
+									"    pm.expect(response.password).to.eql(userPassword);",
+									"});",
+									"",
+									"pm.test(`Type Id = ${userTypeId}`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(\"Active = true\", function() {",
+									"    pm.expect(response.active).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{UrlApi}}/User/{{PostmanUserId}}",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User",
+								"{{PostmanUserId}}"
+							]
+						},
+						"description": "A basic get that returns a user based on an id"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "151cdd14-aa60-4eef-a3f1-ea892c5bd94b",
+								"exec": [
+									"pm.environment.set(\"PostmanUserName\", \"Updated Postman\");",
+									"pm.environment.set(\"PostmanUserLogin\", \"updatedpostman\");",
+									"pm.environment.set(\"PostmanUserPassword\", \"updatedpassword\");",
+									"pm.environment.set(\"PostmanUserTypeId\", 1)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1168f140-f457-4646-a054-1d07d16353e2",
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"let userName = pm.environment.get(\"PostmanUserName\");",
+									"let userLogin = pm.environment.get(\"PostmanUserLogin\");",
+									"let userPassword = pm.environment.get(\"PostmanUserPassword\");",
+									"let userTypeId = pm.environment.get(\"PostmanUserTypeId\");",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(`Name = \"${userName}\"`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(`Login = \"${userLogin}\"`, function() {",
+									"    pm.expect(response.login).to.eql(userLogin);",
+									"});",
+									"",
+									"pm.test(`Password = \"${userPassword}\"`, function() {",
+									"    pm.expect(response.password).to.eql(userPassword);",
+									"});",
+									"",
+									"pm.test(`Type Id = ${userTypeId}`, function() {",
+									"    pm.expect(response.name).to.eql(userName);",
+									"});",
+									"",
+									"pm.test(\"Active = true\", function() {",
+									"    pm.expect(response.active).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Id\": {{PostmanUserId}},\n    \"Name\": \"{{PostmanUserName}}\",\n    \"Login\": \"{{PostmanUserLogin}}\",\n\t\"Password\": \"{{PostmanUserPassword}}\",\n    \"TypeId\": {{PostmanUserTypeId}},\n    \"Active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlApi}}/User/{{PostmanUserId}}",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User",
+								"{{PostmanUserId}}"
+							]
+						},
+						"description": " A basic put to edit the users from your database"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dbc64542-bbf2-4e59-950f-5c51a58f3458",
+								"exec": [
+									"let responseResult = pm.response.json().result;",
+									"",
+									"function findUserByName (name) {",
+									"    return responseResult.find(u => u.name == name);",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Administrator exists!\", function() {",
+									"    let user = findUserByName(\"Administrator\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(1);",
+									"    pm.expect(user.name).to.eql(\"Administrator\");",
+									"    pm.expect(user.login).to.eql(\"admin\");",
+									"    pm.expect(user.typeId).to.eql(1);",
+									"});",
+									"",
+									"pm.test(\"Editor exists!\", function() {",
+									"    let user = findUserByName(\"Editor\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(2);",
+									"    pm.expect(user.name).to.eql(\"Editor\");",
+									"    pm.expect(user.login).to.eql(\"editor\");",
+									"    pm.expect(user.typeId).to.eql(2);",
+									"});",
+									"",
+									"pm.test(\"General exists!\", function() {",
+									"    let user = findUserByName(\"General\");",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(3);",
+									"    pm.expect(user.name).to.eql(\"General\");",
+									"    pm.expect(user.login).to.eql(\"general\");",
+									"    pm.expect(user.typeId).to.eql(3);",
+									"});",
+									"",
+									"let postmanUserId = pm.environment.get(\"PostmanUserId\");",
+									"let postmanUserName = pm.environment.get(\"PostmanUserName\");",
+									"let postmanUserLogin = pm.environment.get(\"PostmanUserLogin\");",
+									"let postmanUserTypeId = pm.environment.get(\"PostmanUserTypeId\");",
+									"",
+									"pm.test(`${postmanUserName} exists!`, function() {",
+									"    let user = findUserByName(postmanUserName);",
+									"    pm.expect(user).to.be.an('object');",
+									"    pm.expect(user.id).to.eql(postmanUserId);",
+									"    pm.expect(user.name).to.eql(postmanUserName);",
+									"    pm.expect(user.login).to.eql(postmanUserLogin);",
+									"    pm.expect(user.typeId).to.eql(postmanUserTypeId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Filters\": { },\r\n    \"Page\": 1,\r\n    \"Limit\": 20\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{UrlApi}}/User/Search",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User",
+								"Search"
+							]
+						},
+						"description": "A get that you can filter based on the logic you make in the application"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c006f936-50d5-4fd3-b2d1-8c20deda59dd",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{UrlApi}}/User/{{PostmanUserId}}",
+							"host": [
+								"{{UrlApi}}"
+							],
+							"path": [
+								"User",
+								"{{PostmanUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "A collection of requests you can make with the user controller",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7fc46c27-c1b9-49d3-9658-977e3f4495fa",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b10aed85-fab1-4dfb-88de-c9b3eb8cebeb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

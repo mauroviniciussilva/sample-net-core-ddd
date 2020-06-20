@@ -117,7 +117,7 @@ namespace Sample.Application.Controllers
 
             var vwResult = _mapper.Map<TViewModelEdit>(result);
 
-            return Ok(vwResult);
+            return Created(this.Request.Scheme, vwResult);
         }
 
         /// <summary>
