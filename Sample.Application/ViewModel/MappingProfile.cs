@@ -10,10 +10,6 @@ namespace Sample.Application.ViewModel
             CreateMap<User, UserEditViewModel>();
             CreateMap<UserEditViewModel, User>();
             CreateMap<User, UserListViewModel>();
-
-            CreateMap<SampleEntity, SampleEditViewModel>();
-            CreateMap<SampleEditViewModel, SampleEntity>();
-            CreateMap<SampleEntity, SampleListViewModel>();
         }
     }
 }

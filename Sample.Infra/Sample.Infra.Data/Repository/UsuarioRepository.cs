@@ -8,7 +8,7 @@ namespace Sample.Infra.Data.Repository
 {
     public class UserRepository : RepositoryBase<User>, IUserRepository
     {
-        public UserRepository(SampleContext context) : base(context) { }
+        public UserRepository(CoreContext context) : base(context) { }
 
         /// <summary>
         /// Returns a user based on its login

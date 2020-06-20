@@ -36,38 +36,6 @@ namespace Sample.Application.Controllers
         #region [ Methods ]
 
         /// <summary>
-        /// A basic get that you can filter based on the filter you receive
-        /// </summary>
-        /// <remarks><![CDATA[
-        /// The QueryFilter that is used in this route have the following structure in the JSON format:
-        /// {
-        ///     "Filters": {
-        ///         "CreationDate": "2020-01-01",
-        ///         "UserCreationId": "1"
-        ///     },
-        ///     "Start": 1,
-        ///     "Limit": 20
-        /// }
-        /// 
-        /// Where:
-        ///     - Filters: the key of the dictionary represents the name of the property of the entity and the value represents the value you want to filter.
-        ///     - Start: represents the page number
-        ///     - Limit: represents the page limit
-        /// ]]>
-        /// </remarks>
-        /// <param name="filter">An object with the filter parameters</param>
-        /// <returns>Object that contains a list of entities and the record count</returns>
-        [HttpGet("List")]
-        public virtual ActionResult<IEnumerable<string>> List([ModelBinder]QueryFilter filter)
-        {
-            var pagedResult = _service.Search(filter);
-
-            var vwResult = _mapper.Map<IList<TViewModelList>>(pagedResult.Result);
-
-            return Ok(new { Result = vwResult, Count = pagedResult.RowCount });
-        }
-
-        /// <summary>
         /// A basic get that returns all the registries from your database
         /// </summary>
         /// <remarks><![CDATA[
@@ -98,6 +66,38 @@ namespace Sample.Application.Controllers
             var vwResult = _mapper.Map<TViewModelEdit>(data);
 
             return Ok(vwResult);
+        }
+
+        /// <summary>
+        /// A basic get that you can filter based on the filter you receive
+        /// </summary>
+        /// <remarks><![CDATA[
+        /// The QueryFilter that is used in this route have the following structure in the JSON format:
+        /// {
+        ///     "Filters": {
+        ///         "CreationDate": "2020-01-01",
+        ///         "UserCreationId": "1"
+        ///     },
+        ///     "Page": 1,
+        ///     "Limit": 20
+        /// }
+        /// 
+        /// Where:
+        ///     - Filters: the key of the dictionary represents the name of the property of the entity and the value represents the value you want to filter.
+        ///     - Start: represents the page number
+        ///     - Limit: represents the page limit
+        /// ]]>
+        /// </remarks>
+        /// <param name="filter">An object with the filter parameters</param>
+        /// <returns>Object that contains a list of entities and the record count</returns>
+        [HttpGet("Search")]
+        public virtual ActionResult<IEnumerable<string>> Search([ModelBinder]QueryFilter filter)
+        {
+            var pagedResult = _service.Search(filter);
+
+            var vwResult = _mapper.Map<IList<TViewModelList>>(pagedResult.Result);
+
+            return Ok(new { Result = vwResult, Count = pagedResult.RowCount });
         }
 
         /// <summary>

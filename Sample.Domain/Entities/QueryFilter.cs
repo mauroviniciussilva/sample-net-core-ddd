@@ -5,7 +5,7 @@ namespace Sample.Domain.Entities
     public class QueryFilter
     {
         public Dictionary<string, string> Filters { get; set; }
-        public int Start { get; set; }
+        public int Page { get; set; }
         public int Limit { get; set; }
 
         #region [ Constructor ]

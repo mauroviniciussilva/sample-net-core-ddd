@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,8 @@ using Sample.Application.ViewModel;
 using Sample.Domain.Entities;
 using Sample.Domain.Interfaces;
 using Sample.Infra.CrossCutting.IoC;
+using Sample.Infra.Data.Context;
+using Sample.Infra.Data.Utils;
 using Sample.Infra.Logging;
 using System.Globalization;
 using System.Text;
@@ -45,7 +48,6 @@ namespace Sample.Application
             services.AddControllers();
             services.AddMemoryCache();
 
-
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {
@@ -75,13 +77,11 @@ namespace Sample.Application
             services.AddSingleton(mapper);
 
 
-            // Register User HElper 
-
+            // Register User Helper 
             services.AddHttpContextAccessor();
             services.AddScoped<IUserHelper, UserHelper>();
 
             // Register Domain
-
             CoreIoC.Register(services, () => new DependencyInjectionConfig
             {
                 Configuration = Configuration,
@@ -89,8 +89,7 @@ namespace Sample.Application
             });
 
             // Register SampleSettings
-
-            services.Configure<SampleSettings>(Configuration.GetSection("Sample"));
+            services.Configure<SampleSettings>(Configuration.GetSection("Settings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,20 +115,10 @@ namespace Sample.Application
             });
 
             app.UseRouting();
-
-            // Global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

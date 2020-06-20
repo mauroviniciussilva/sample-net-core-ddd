@@ -1,27 +1,28 @@
 ﻿using Sample.Domain.Entities;
 using Sample.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
+using System;
+using Sample.Infra.Data.Utils;
 
 namespace Sample.Infra.Data.Context
 {
     /// <summary>
-    /// An example of how to make contexts in the application
+    /// The core contexto of the application
     /// </summary>
-    public class SampleContext : DbContext
+    public class CoreContext : DbContext
     {
         #region [ Entities of the Context ]
 
         internal DbSet<User> User { get; set; }
-        internal DbSet<SampleEntity> Sample { get; set; }
 
         #endregion
 
         #region [ Constructor ]
 
-        public SampleContext(DbContextOptions options) : base(options)
+        public CoreContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            Database.EnsureCreated();
+            InitializeDataBase.Initialize(this);
         }
 
         #endregion
@@ -34,7 +35,6 @@ namespace Sample.Infra.Data.Context
 
             #region [ Maps of the Context ]
 
-            SampleMap.OnCreateTable(ref modelBuilder);
             UserMap.OnCreateTable(ref modelBuilder);
 
             #endregion

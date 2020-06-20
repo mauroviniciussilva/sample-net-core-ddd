@@ -9,7 +9,7 @@ namespace Sample.Infra.Data.Mapping
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable(nameof(User), "dbo");
+                entity.ToTable(nameof(User));
 
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
@@ -17,11 +17,11 @@ namespace Sample.Infra.Data.Mapping
                 entity.Property(e => e.Name).HasColumnType("Varchar(128)").HasMaxLength(128).IsRequired();
                 entity.Property(e => e.Login).HasColumnType("Varchar(128)").HasMaxLength(128).IsRequired();
                 entity.Property(e => e.Password).HasColumnType("Varchar(128)").HasMaxLength(128).IsRequired();
-                entity.Property(e => e.Active).HasColumnType("Bit").IsRequired();
+                entity.Property(e => e.Active).HasColumnType("TinyInt").IsRequired();
                 entity.Property(e => e.UserCreationId).IsRequired().HasColumnType("Int");
-                entity.Property(e => e.CreationDate).IsRequired().HasColumnType("Smalldatetime");
+                entity.Property(e => e.CreationDate).IsRequired().HasColumnType("DateTime");
                 entity.Property(e => e.UserModificationId).HasColumnType("Int");
-                entity.Property(e => e.ModificationDate).HasColumnType("Smalldatetime");
+                entity.Property(e => e.ModificationDate).HasColumnType("DateTime");
 
                 entity.HasQueryFilter(b => EF.Property<bool>(b, "Active") == true);
             });

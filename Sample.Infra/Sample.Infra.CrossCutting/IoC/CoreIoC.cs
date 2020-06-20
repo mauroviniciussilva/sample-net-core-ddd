@@ -11,6 +11,7 @@ using Sample.Infra.Data.Repositories;
 using Sample.Infra.Data.Repository;
 using Sample.Infra.Logging;
 using System;
+using Sample.Infra.Data.Utils;
 
 namespace Sample.Infra.CrossCutting.IoC
 {
@@ -26,16 +27,13 @@ namespace Sample.Infra.CrossCutting.IoC
                 return LogManager.GetCurrentClassLogger();
             });
 
-            services.AddDbContextPool<SampleContext>(options => options.UseSqlServer(config.Configuration.GetConnectionString("SampleConnection")).AddInterceptors(new DbNoLockInterceptor()));
+            services.AddDbContextPool<CoreContext>(options => options.UseMySQL(config.Configuration.GetConnectionString("DefaultConnection")).AddInterceptors(new DbNoLockInterceptor()));
 
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped(typeof(IServiceBase<>), typeof(ServiceBase<>));
 
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(IUserService), typeof(UserService));
-
-            services.AddScoped(typeof(ISampleRepository), typeof(SampleRepository));
-            services.AddScoped(typeof(ISampleService), typeof(SampleService));
         }
     }
 }

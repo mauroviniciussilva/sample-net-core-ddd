@@ -2,6 +2,8 @@
 {
     public class Error
     {
+        #region [ Properties ]
+
         /// <summary>
         /// Error Code
         /// </summary>
@@ -10,6 +12,10 @@
         /// Error Message
         /// </summary>
         public string Message { get; private set; }
+
+        #endregion
+
+        #region [ Constructor ]
 
         /// <summary>
         /// Initializes an error instance with a code and message
@@ -30,6 +36,10 @@
         {
             SetMessage(message);
         }
+
+        #endregion
+
+        #region [ Methods ]
 
         /// <summary>
         /// Set the Code
@@ -54,5 +64,7 @@
         /// </summary>
         /// <returns>Error Message</returns>
         public override string ToString() => Message;
+
+        #endregion
     }
 }

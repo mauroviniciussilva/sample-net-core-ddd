@@ -20,7 +20,7 @@ namespace Sample.Application.Filter
             var query = new QueryFilter
             {
                 Limit = GetLimit(queryString),
-                Start = GetStart(queryString)
+                Page = GetPage(queryString)
             };
             GetFilter(queryString, query);
 
@@ -28,13 +28,13 @@ namespace Sample.Application.Filter
             return Task.CompletedTask;
         }
 
-        private static int GetStart(Dictionary<string, StringValues> queryString) => !queryString.ContainsKey("start") ? 0 : Convert.ToInt32(queryString["start"]);
+        private static int GetPage(Dictionary<string, StringValues> queryString) => !queryString.ContainsKey("page") ? 0 : Convert.ToInt32(queryString["page"]);
 
         private static int GetLimit(Dictionary<string, StringValues> queryString) => !queryString.ContainsKey("limit") ? 0 : Convert.ToInt32(queryString["limit"]);
 
         private static void GetFilter(Dictionary<string, StringValues> queryString, QueryFilter filter)
         {
-            queryString.Remove("start");
+            queryString.Remove("page");
             queryString.Remove("limit");
             queryString.Remove("_");
 

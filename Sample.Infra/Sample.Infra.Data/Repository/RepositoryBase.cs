@@ -16,14 +16,14 @@ namespace Sample.Infra.Data.Repositories
     {
         #region [ Properties ]
 
-        protected readonly SampleContext Context;
+        protected readonly CoreContext Context;
         protected readonly DbSet<TEntity> DbSet;
 
         #endregion
 
         #region [ Constructor ]
 
-        public RepositoryBase(SampleContext context)
+        public RepositoryBase(CoreContext context)
         {
             Context = context;
             DbSet = Context.Set<TEntity>();
@@ -117,8 +117,12 @@ namespace Sample.Infra.Data.Repositories
         {
             filter.Filters.TryGetValue("Page", out string page);
             filter.Filters.TryGetValue("Limit", out string limit);
-            var pagina = int.Parse(page) > 0? int.Parse(page) : 1;
-            var limite = int.Parse(limit) > 0? int.Parse(limit) : 0;
+
+            var pagina = 1;
+            var limite = 20;
+
+            if (!string.IsNullOrEmpty(page)) pagina = int.Parse(page);
+            if (!string.IsNullOrEmpty(limit)) limite = int.Parse(limit);
 
             IQueryable<TEntity> query = GetAll();
 
@@ -138,7 +142,7 @@ namespace Sample.Infra.Data.Repositories
                                   .ToList();
             return result;
         }
-       
+
         /// <summary>
         /// Update a existing entity on the database
         /// </summary>
