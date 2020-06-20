@@ -27,6 +27,10 @@ To compile the solution, SDK 3.1 must be installed on the machine. If you don't 
 
 In this project I am using MySQL. Therefore, to run the project in your local environment, it is necessary to have installed some version of MySQL, which you can find on the page: [MySQL Community Downloads](https://dev.mysql.com/downloads/). You dont need to run any script or migrate to run this project, the database will be created when you run it.
 
+## Unit Tests
+
+Unit tests were created with [xUnit](https://xunit.net/) for the service layer (soon I will create tests for the data access layers). All the tests created are in the same project, and this choice was based on the fact that there are few classes to be tested, but you can separate the tests into more projects for each layer according to the size of your project and your preference. To facilitate their identification, the layers are separated into folders in the test project.
+
 ## How to run the application
 
 1. Set your connection string (in *appsettings.json*)
@@ -34,6 +38,8 @@ In this project I am using MySQL. Therefore, to run the project in your local en
 
 ## Testing the Application
 
-It is possible to test the APIs through Postman. I left a collection and an environment, that you can import and test the requests individually, and make your own tests. You will find the files in:
+It is possible to test the APIs through Postman. I left a collection and an environment, that you can import and test the requests individually, and make your own tests. If you are not familiar with Postman, you can find a complete guide at: [Postman Documentation](https://learning.postman.com/docs/postman/launching-postman/introduction/)
+
+You will find the files in:
 
 - sample-net-core-ddd\Postman
