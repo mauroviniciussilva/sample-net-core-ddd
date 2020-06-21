@@ -6,14 +6,14 @@ First of all, as you must know, DDD is not an architecture. DDD (Domain Driven D
 
 ![Architeture of the project](docs/Project_Architeture.PNG)
 
-- Application layer: responsible for the main project, as this is where API controllers and services will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action.
+- Application layer: where API controllers will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action.
 - Background: responsible for the background jobs and processing, where you can program tasks to execute in a time interval or even integrate with a message-broker.
-- Domain layer: responsible for implementing classes and models, which will be mapped to the database, in addition to obtaining declarations of interfaces, constants, DTOs (Data Transfer Object) and enums.
+- Domain layer: This layer is the basis of the entire DDD-based project. This is where we need to properly define our business model in terms of classes, and all the key logic and business rules lies in the domain layer.
 - Infrastructure layer: divided into three sub-layers
     - Data: performs the persistence with the database.
     - Cross-Cutting: a separate layer that does not obey the layer hierarchy. As its name says, this layer crosses the entire hierarchy. It contains the functionalities that can be used in any part of the code, such as documents validation, consumption of external API and use of some security.
     - Logging: responsible to make logs to the application.
-- Service layer: it would be the “heart” of the project, as it is where all business rules and validations are made, before data persist in the database.
+- Service layer: responsible for orchestrating calls to the domain layer, where it is possible to make some validations and request data from repositories to return to the application layer.
 
 ## Generic Classes
 
@@ -29,7 +29,7 @@ In this project I am using MySQL. Therefore, to run the project in your local en
 
 ## Unit Tests
 
-Unit tests were created with [xUnit](https://xunit.net/) for the service layer (soon I will create tests for the data access layers). All the tests created are in the same project, and this choice was based on the fact that there are few classes to be tested, but you can separate the tests into more projects for each layer according to the size of your project and your preference. To facilitate their identification, the layers are separated into folders in the test project.
+Unit tests were created with [xUnit](https://xunit.net/) for the service and data access (infrastructure) layers. All the tests created are in the same project, and this choice was based on the fact that there are few classes to be tested, but you can separate the tests into more projects for each layer according to the size of your project and your preference. To facilitate their identification, the layers are separated into folders in the test project.
 
 ## How to run the application
 
