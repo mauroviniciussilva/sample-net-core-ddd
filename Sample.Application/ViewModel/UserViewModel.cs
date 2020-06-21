@@ -18,6 +18,7 @@ namespace Sample.Application.ViewModel
         public string Name { get; set; }
         public string Login { get; set; }
         public int TypeId { get; set; }
+        public bool Active { get; set; }
     }
 
     public class UserLoginViewModel

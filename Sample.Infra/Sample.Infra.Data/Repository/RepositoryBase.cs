@@ -1,11 +1,8 @@
-﻿using Sample.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Repositories;
 using Sample.Infra.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Sample.Infra.Data.Repositories
 {
@@ -47,26 +44,25 @@ namespace Sample.Infra.Data.Repositories
         }
 
         /// <summary>
-        /// Inactive an entity based on its id
+        /// Returns all the active registries from the database
         /// </summary>
-        /// <param name="id">Entity's Id</param>
-        /// <param name="loggedUserId">Logged In User Id</param>
-        public void Inactivate(int id, int loggedUserId)
+        /// <returns>List of Entities</returns>
+        public virtual IQueryable<TEntity> GetAllActive()
         {
-            TEntity entity = GetById(id);
-            entity.Active = false;
-            entity.UserModificationId = loggedUserId;
-            entity.ModificationDate = DateTime.Now;
-            DbSet.Update(entity);
+            return Context.Set<TEntity>().Where(x => x.Active);
         }
 
         /// <summary>
         /// Returns all the registries from the database
         /// </summary>
+        /// <remarks><![CDATA[
+        /// This method should be called only when you intend to return inactive records
+        /// ]]>
+        /// </remarks>
         /// <returns>List of Entities</returns>
         public virtual IQueryable<TEntity> GetAll()
         {
-            return Context.Set<TEntity>().Where(x => x.Active);
+            return Context.Set<TEntity>();
         }
 
         /// <summary>
@@ -77,17 +73,6 @@ namespace Sample.Infra.Data.Repositories
         public virtual TEntity GetById(int id)
         {
             return Context.Set<TEntity>().FirstOrDefault(x => x.Id == id && x.Active);
-        }
-
-        /// <summary>
-        /// Returns an entity and its childs based on its id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="include"></param>
-        /// <returns></returns>
-        public virtual TEntity GetByIdWithInclude(int id, string include)
-        {
-            return Context.Set<TEntity>().Include(include).FirstOrDefault(x => x.Id == id);
         }
 
         /// <summary>
@@ -104,41 +89,6 @@ namespace Sample.Infra.Data.Repositories
         }
 
         /// <summary>
-        /// Searches a list of entities based on a query filter
-        /// </summary>
-        /// <param name="filter">Query Filter</param>
-        /// <returns>List of Entities</returns>
-        public virtual PagedResult<TEntity> Search(QueryFilter filter)
-        {
-            filter.Filters.TryGetValue("Page", out string page);
-            filter.Filters.TryGetValue("Limit", out string limit);
-
-            var pagina = 1;
-            var limite = 20;
-
-            if (!string.IsNullOrEmpty(page)) pagina = int.Parse(page);
-            if (!string.IsNullOrEmpty(limit)) limite = int.Parse(limit);
-
-            IQueryable<TEntity> query = GetAll();
-
-            var result = new PagedResult<TEntity>
-            {
-                CurrentPage = pagina,
-                PageSize = limite,
-                RowCount = query.Count()
-            };
-
-            var pageCount = (double)result.RowCount / limite;
-            result.PageCount = (int)Math.Ceiling(pageCount);
-
-            var skip = (pagina - 1) * limite;
-            result.Result = query.Skip(skip)
-                                  .Take(limite)
-                                  .ToList();
-            return result;
-        }
-
-        /// <summary>
         /// Update a existing entity on the database
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -147,6 +97,7 @@ namespace Sample.Infra.Data.Repositories
         {
             var result = DbSet.Attach(entity);
             result.State = EntityState.Modified;
+            result.Property(x => x.Id).IsModified = false;
             result.Property(x => x.UserCreationId).IsModified = false;
             result.Property(x => x.CreationDate).IsModified = false;
 

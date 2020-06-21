@@ -19,39 +19,9 @@ namespace Sample.Infra.Data.Utils
             {
                 var usuarios = new List<User>
                 {
-                    new User
-                    {
-                        Id = 1,
-                        Name = "Administrator",
-                        Login = "admin",
-                        Password = "admin",
-                        TypeId = EnumUserType.Administrator,
-                        UserCreationId = 1,
-                        CreationDate = DateTime.Now,
-                        Active = true
-                    },
-                    new User
-                    {
-                        Id = 2,
-                        Name = "Editor",
-                        Login = "editor",
-                        Password = "editor",
-                        TypeId = EnumUserType.Editor,
-                        UserCreationId = 1,
-                        CreationDate = DateTime.Now,
-                        Active = true
-                    },
-                    new User
-                    {
-                        Id = 3,
-                        Name = "General",
-                        Login = "general",
-                        Password = "general",
-                        TypeId = EnumUserType.General,
-                        UserCreationId = 1,
-                        CreationDate = DateTime.Now,
-                        Active = true
-                    }
+                    new User("Administrator", "admin", "admin", EnumUserType.Administrator, 1),
+                    new User("Editor", "editor", "editor", EnumUserType.Editor, 1),
+                    new User("General", "general", "general", EnumUserType.General, 1)
                 };
 
                 context.AddRange(usuarios);

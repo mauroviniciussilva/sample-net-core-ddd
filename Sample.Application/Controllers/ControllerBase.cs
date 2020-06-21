@@ -46,7 +46,7 @@ namespace Sample.Application.Controllers
         [HttpGet]
         public virtual ActionResult<IEnumerable<string>> Get()
         {
-            IEnumerable<TEntity> data = _service.Get();
+            IEnumerable<TEntity> data = _service.GetAll();
 
             var vwResult = _mapper.Map<IList<TViewModelList>>(data);
 
@@ -69,23 +69,14 @@ namespace Sample.Application.Controllers
         }
 
         /// <summary>
-        /// A basic get that you can filter based on the filter you receive
+        /// A search API that returns paged data.
         /// </summary>
         /// <remarks><![CDATA[
-        /// The QueryFilter that is used in this route have the following structure in the JSON format:
-        /// {
-        ///     "Filters": {
-        ///         "CreationDate": "2020-01-01",
-        ///         "UserCreationId": "1"
-        ///     },
-        ///     "Page": 1,
-        ///     "Limit": 20
-        /// }
-        /// 
-        /// Where:
-        ///     - Filters: the key of the dictionary represents the name of the property of the entity and the value represents the value you want to filter.
-        ///     - Start: represents the page number
-        ///     - Limit: represents the page limit
+        /// The QueryFilter that is used in this route can be passed in the URI:
+        /// For example:
+        ///     Api/User/Search?Page=1&Limit=10&Active=true
+        ///     Api/User/Search?Page=1&Limit=10&UserCreationId=1
+        /// If the Page and the Limit are not informed, they default to 1 and 20, respectively
         /// ]]>
         /// </remarks>
         /// <param name="filter">An object with the filter parameters</param>
@@ -136,12 +127,12 @@ namespace Sample.Application.Controllers
                 return NotFound();
             }
 
-            var newEntity = _mapper.Map(viewModel, entity);
+            var updatedEntity = _mapper.Map(viewModel, entity);
 
-            if (!newEntity.IsValid())
+            if (!updatedEntity.IsValid())
                 return BadRequest(entity.GetErros());
 
-            var result = _service.Update(newEntity);
+            var result = _service.Update(updatedEntity);
 
             var vwResult = _mapper.Map<TViewModelEdit>(result);
 

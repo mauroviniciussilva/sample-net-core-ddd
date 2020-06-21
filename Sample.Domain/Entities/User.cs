@@ -1,12 +1,7 @@
-﻿namespace Sample.Domain.Entities
-{
-    public enum EnumUserType
-    {
-        Administrator = 1,
-        Editor = 2,
-        General = 3
-    }
+﻿using System;
 
+namespace Sample.Domain.Entities
+{
     public class User : EntityBase
     {
         public string Name { get; set; }
@@ -16,14 +11,16 @@
 
         public User()
         {
-
+            // Required for EntityFramework
         }
 
-        public User(string name, string login, string password)
+        public User(string name, string login, string password, EnumUserType userType, int userCreationId)
         {
             Name = name;
             Login = login;
             Password = password;
+            UserCreationId = userCreationId;
+            TypeId = userType;
         }
 
         public override bool IsValid()
@@ -43,7 +40,19 @@
                 AddError("Password is required!");
             }
 
-            return Erros.Count == 0;
+            if (CreationDate == DateTime.MinValue)
+            {
+                AddError("Creation date not defined");
+            }
+
+            return Errors.Count == 0;
         }
+    }
+
+    public enum EnumUserType
+    {
+        Administrator = 1,
+        Editor = 2,
+        General = 3
     }
 }

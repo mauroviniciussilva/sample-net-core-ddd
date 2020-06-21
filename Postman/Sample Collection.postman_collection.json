@@ -448,7 +448,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Filters\": { },\r\n    \"Page\": 1,\r\n    \"Limit\": 20\r\n}\r\n",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -456,13 +456,27 @@
 							}
 						},
 						"url": {
-							"raw": "{{UrlApi}}/User/Search",
+							"raw": "{{UrlApi}}/User/Search?Page=1&Limit=10&Active=true",
 							"host": [
 								"{{UrlApi}}"
 							],
 							"path": [
 								"User",
 								"Search"
+							],
+							"query": [
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "Limit",
+									"value": "10"
+								},
+								{
+									"key": "Active",
+									"value": "true"
+								}
 							]
 						},
 						"description": "A get that you can filter based on the logic you make in the application"

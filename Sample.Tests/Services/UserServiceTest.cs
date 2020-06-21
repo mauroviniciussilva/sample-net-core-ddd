@@ -51,7 +51,7 @@ namespace Sample.Tests.Services
         {
             var userLogin = "testuser";
             var currentDateTime = DateTime.Now;
-            var user = new User(name, userLogin, "password");
+            var user = new User(name, userLogin, "password", EnumUserType.Administrator, _loggerUserId);
 
             if (name == null)
             {
@@ -73,7 +73,7 @@ namespace Sample.Tests.Services
                 // Must return an error when trying to add another user with the same login
                 Assert.Throws<DomainException>(() =>
                 {
-                    var duplicatedUser = new User("Duplicated Login", userLogin, "password");
+                    var duplicatedUser = new User("Duplicated Login", userLogin, "password", EnumUserType.Administrator, _loggerUserId);
                     _userService.Add(duplicatedUser);
                 });
             }
@@ -94,7 +94,7 @@ namespace Sample.Tests.Services
         }
 
         /// <summary>
-        ///  Update a existing user on the database
+        /// Update a existing user on the database
         /// </summary>
         /// <remarks><![CDATA[
         ///     Although this is an existing method in the ServiceBase, it has been overridden in the UserService
@@ -157,7 +157,7 @@ namespace Sample.Tests.Services
 
             var userRepository = new Mock<IUserRepository>();
 
-            userRepository.Setup(us => us.GetAll())
+            userRepository.Setup(us => us.GetAllActive())
                 .Returns(() =>
                 {
                     return _users.Where(u => u.Active).AsQueryable();
@@ -168,15 +168,6 @@ namespace Sample.Tests.Services
                 {
                     return _users.FirstOrDefault(u => u.Id == id && u.Active);
                 });
-
-            userRepository.Setup(us => us.Inactivate(It.IsAny<int>(), It.IsAny<int>()))
-               .Callback<int, int>((id, loggedUserId) =>
-               {
-                   var user = _users.FirstOrDefault(u => u.Id == id);
-                   user.Active = false;
-                   user.ModificationDate = DateTime.Now;
-                   user.UserModificationId = loggedUserId;
-               });
 
             userRepository.Setup(ur => ur.Add(It.IsAny<User>()))
                 .Returns<User>((usuario) =>

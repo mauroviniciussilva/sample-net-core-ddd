@@ -1,6 +1,7 @@
 ﻿using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sample.Domain.Interfaces.Services
 {
@@ -26,7 +27,7 @@ namespace Sample.Domain.Interfaces.Services
         /// Returns all the registries from the database
         /// </summary>
         /// <returns>List of Entities</returns>
-        IEnumerable<T> Get();
+        IEnumerable<T> GetAll();
         /// <summary>
         /// Returns an entity based on its id
         /// </summary>
@@ -38,7 +39,7 @@ namespace Sample.Domain.Interfaces.Services
         /// </summary>
         /// <param name="filter">Query Filter</param>
         /// <returns>List of Entities</returns>
-        PagedResult<T> Search(QueryFilter filter);
+        PagedResult<T> Search(QueryFilter filter, IQueryable<T> query = null);
         /// <summary>
         /// Update a existing entity on the database
         /// </summary>

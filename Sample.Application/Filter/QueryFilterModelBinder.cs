@@ -15,13 +15,9 @@ namespace Sample.Application.Filter
             if (bindingContext.ModelType != typeof(QueryFilter))
                 throw new ArgumentNullException(nameof(bindingContext));
 
-            var queryString = bindingContext.ActionContext.HttpContext.Request.Query.ToDictionary(x => x.Key, x => x.Value);
+            var queryString = bindingContext.ActionContext.HttpContext.Request.Query.ToDictionary(x => x.Key.ToLower(), x => x.Value);
+            var query = new QueryFilter { Limit = GetLimit(queryString), Page = GetPage(queryString) };
 
-            var query = new QueryFilter
-            {
-                Limit = GetLimit(queryString),
-                Page = GetPage(queryString)
-            };
             GetFilter(queryString, query);
 
             bindingContext.Result = ModelBindingResult.Success(query);

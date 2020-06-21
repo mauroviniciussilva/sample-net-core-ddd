@@ -6,67 +6,133 @@ namespace Sample.Domain.Entities
 {
     public abstract class EntityBase
     {
-        [NotMapped]
-        internal List<DomainError> Erros { get; set; }
-
-        protected EntityBase()
-        {
-            Erros = new List<DomainError>();
-        }
-
         /// <summary>
         /// Primary key of the entity
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; protected set; }
         /// <summary>
         /// Id of the user that created the registry
         /// </summary>
-        public int UserCreationId { get; set; }
+        public int UserCreationId { get; protected set; }
         /// <summary>
         /// Creation date of the entity
         /// </summary>
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; protected set; }
         /// <summary>
         /// Id of the user who last modified the user
         /// </summary>
-        public int? UserModificationId { get; set; }
+        public int? UserModificationId { get; protected set; }
         /// <summary>
         /// Last date the record was modified
         /// </summary>
-        public DateTime? ModificationDate { get; set; }
+        public DateTime? ModificationDate { get; protected set; }
         /// <summary>
         /// Boolean that indicates whether the record is active or not
         /// </summary>
-        public bool Active { get; set; }
+        public bool Active { get; protected set; }
+
         /// <summary>
-        /// Method que vali
+        /// List of domain errors
+        /// </summary>
+        [NotMapped]
+        internal List<DomainError> Errors { get; set; }
+
+        #region [ Constructor ]
+
+        protected EntityBase()
+        {
+            Errors = new List<DomainError>();
+            CreationDate = DateTime.Now;
+            Active = true;
+        }
+
+        #endregion
+
+        #region [ Methods ]
+
+        /// <summary>
+        /// Validates the entity.
         /// </summary>
         /// <returns></returns>
         public abstract bool IsValid();
 
         /// <summary>
-        /// Method that checks whether the entity is valid or not
+        /// Adds a domain error to the entity
         /// </summary>
-        /// <param name="error"></param>
+        /// <param name="error">Message error</param>
         public void AddError(string error)
         {
-            Erros.Add(new DomainError(error));
+            Errors.Add(new DomainError(error));
         }       
 
         /// <summary>
-        /// Method that returns the erros of the entity
+        /// Returns the domain erros of the entity.
         /// </summary>
         /// <returns></returns>
-        public List<DomainError> GetErros() => Erros;
+        public List<DomainError> GetErros() => Errors;
+
+        /// <summary>
+        /// Changes modification information on the entity.
+        /// </summary>
+        /// <param name="userModificationId">Id of the Logged User</param>
+        public virtual void UpdateEntity(int userModificationId)
+        {
+            ModificationDate = DateTime.Now;
+            UserModificationId = userModificationId;
+        }
+
+        /// <summary>
+        /// Changes the cration user of the entity. This method should only be used when the 
+        /// entity construction is done by EntityFramework.
+        /// </summary>
+        /// <param name="userCreationId">Id of the creation user</param>
+        public void UpdateUserCreationId(int userCreationId)
+        {
+            UserCreationId = userCreationId;
+        }
+
+        /// <summary>
+        /// Restore the entity to a state of activity.
+        /// </summary>
+        /// <param name="userModificationId"></param>
+        public void Reactivate(int userModificationId)
+        {
+            UpdateEntity(userModificationId);
+            Active = true;
+        }
+
+        /// <summary>
+        /// Make the entity inactive.
+        /// </summary>
+        /// <param name="userModificationId"></param>
+        public void Inactivate(int userModificationId)
+        {
+            UpdateEntity(userModificationId);
+            Active = false;
+        }
+
+        public string GetPropValue(string propName)
+        {
+            var teste = GetType().GetProperty(propName).GetValue(this).ToString();
+            return teste;
+        }
+
+        #endregion
     }
 
+    /// <summary>
+    /// Entity domain error
+    /// </summary>
     public class DomainError
     {
-        public string Erro { get; set; }
+        /// <summary>
+        /// Error message
+        /// </summary>
+        public string Error { get; set; }
 
-        public DomainError(string erro)
+        public DomainError(string error)
         {
-            Erro = erro;
+            Error = error;
         }
     }
 }

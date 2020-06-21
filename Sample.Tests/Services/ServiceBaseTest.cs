@@ -46,7 +46,7 @@ namespace Sample.Tests.Services
         public void Add_Entity(string name)
         {
             var currentDateTime = DateTime.Now;
-            var entity = new User(name, "testuser", "password");
+            var entity = new User(name, "testuser", "password", EnumUserType.Administrator, 0);
 
             if (name == null)
             {
@@ -63,8 +63,6 @@ namespace Sample.Tests.Services
                 Assert.NotNull(newEntity);
                 // Checking if the Service is setting the parameters as it should
                 Assert.Equal(_loggerUserId, newEntity.UserCreationId);
-                Assert.True(currentDateTime <= newEntity.CreationDate);
-                Assert.True(newEntity.Active);
             }
         }
 
@@ -96,7 +94,7 @@ namespace Sample.Tests.Services
                 // This was designed in this way to recover a record deleted by accident, for data analysis, 
                 // among other possibilities. 
                 Assert.Null(_genericUserService.GetById(id));
-                Assert.Null(_genericUserService.Get().FirstOrDefault(x => x.Id == id));
+                Assert.Null(_genericUserService.GetAll().FirstOrDefault(x => x.Id == id));
             }
             else
             {
@@ -114,7 +112,7 @@ namespace Sample.Tests.Services
         [Fact]
         public void Get_All()
         {
-            var entity = _genericUserService.Get();
+            var entity = _genericUserService.GetAll();
 
             Assert.NotNull(entity);
         }
@@ -181,7 +179,7 @@ namespace Sample.Tests.Services
 
             var baseUserRepository = new Mock<IRepositoryBase<User>>();
 
-            baseUserRepository.Setup(us => us.GetAll())
+            baseUserRepository.Setup(us => us.GetAllActive())
                 .Returns(() =>
                 {
                     return _users.Where(u => u.Active).AsQueryable();
@@ -192,15 +190,6 @@ namespace Sample.Tests.Services
                 {
                     return _users.FirstOrDefault(u => u.Id == id && u.Active);
                 });
-
-            baseUserRepository.Setup(us => us.Inactivate(It.IsAny<int>(), It.IsAny<int>()))
-               .Callback<int, int>((id, loggedUserId) =>
-               {
-                   var user = _users.FirstOrDefault(u => u.Id == id);
-                   user.Active = false;
-                   user.ModificationDate = DateTime.Now;
-                   user.UserModificationId = loggedUserId;
-               });
 
             baseUserRepository.Setup(ur => ur.Add(It.IsAny<User>()))
                 .Returns<User>((user) =>
