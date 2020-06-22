@@ -27,9 +27,15 @@ To compile the solution, SDK 3.1 must be installed on the machine. If you don't 
 
 In this project I am using MySQL. Therefore, to run the project in your local environment, it is necessary to have installed some version of MySQL, which you can find on the page: [MySQL Community Downloads](https://dev.mysql.com/downloads/). You dont need to run any script or migrate to run this project, the database will be created when you run it.
 
+## Background Service
+
+No jobs have actually been implemented in the background (yet), but I've chosen [Quartz](https://github.com/quartznet/quartznet) for scheduling jobs. Quartz it's an old staple of many ASP.NET developers, used as a way of running background tasks on a timer, in a reliable, clustered, way.
+
 ## Unit Tests
 
 Unit tests were created with [xUnit](https://xunit.net/) for the service and data access (infrastructure) layers. All the tests created are in the same project, and this choice was based on the fact that there are few classes to be tested, but you can separate the tests into more projects for each layer according to the size of your project and your preference. To facilitate their identification, the layers are separated into folders in the test project.
+
+For the service tests I've used [Moq](https://www.nuget.org/packages/Moq/) for mocking repositories and [Bogus](https://github.com/bchavez/Bogus) to generate fake data. For the repositories tests I've used [EF Core In-Memory Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/in-memory/?tabs=dotnet-core-cli) , that allows Entity Framework Core to be used with an in-memory database.
 
 ## How to run the application
 
