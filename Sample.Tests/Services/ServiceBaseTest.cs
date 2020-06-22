@@ -112,9 +112,11 @@ namespace Sample.Tests.Services
         [Fact]
         public void Get_All()
         {
-            var entity = _genericUserService.GetAll();
+            var entities = _genericUserService.GetAll();
 
-            Assert.NotNull(entity);
+            // Depending on the order in which the test methods are run, this test can 
+            // return 10 or 11 records
+            Assert.True(entities.Count() >= 10 && entities.Count() <= 11);
         }
 
         /// <summary>
@@ -165,6 +167,47 @@ namespace Sample.Tests.Services
             }
         }
 
+        /// <summary>
+        /// Tests the logic of searching the entites from the database based on a query filter
+        /// </summary>
+        /// <param name="property">Name of the Property</param>
+        [Theory]
+        [InlineData(nameof(EntityBase.Id))]
+        [InlineData(nameof(EntityBase.UserCreationId))]
+        [InlineData(nameof(EntityBase.CreationDate))]
+        [InlineData(nameof(EntityBase.Active))]
+        [InlineData("InvalidProperty")]
+        public void Search_Users(string property)
+        {
+            var randomUser = _users.LastOrDefault();
+
+            var queryFilter = new QueryFilter()
+            {
+                Filters = new Dictionary<string, string>(),
+                Limit = 10,
+                Page = 1
+            };
+
+            queryFilter.AddFilter(property, randomUser.GetPropValue(property));
+
+            // If the property exists in the entity
+            if (randomUser.GetType().GetProperty(property) != null)
+            {
+                var users = _genericUserService.Search(queryFilter);
+
+                Assert.Contains(randomUser, users.Result);
+                Assert.DoesNotContain(users.Result, x => x.GetPropValue(property) != randomUser.GetPropValue(property));
+            }
+            else
+            {
+                // Cannot search based on unknown properties
+                Assert.Throws<DomainException>(() =>
+                {
+                    _genericUserService.Search(queryFilter);
+                });
+            }
+        }
+
         #endregion
 
         #region [ Private Methods ]
@@ -183,6 +226,12 @@ namespace Sample.Tests.Services
                 .Returns(() =>
                 {
                     return _users.Where(u => u.Active).AsQueryable();
+                });
+
+            baseUserRepository.Setup(us => us.GetAll())
+                .Returns(() =>
+                {
+                    return _users.AsQueryable();
                 });
 
             baseUserRepository.Setup(us => us.GetById(It.IsAny<int>()))

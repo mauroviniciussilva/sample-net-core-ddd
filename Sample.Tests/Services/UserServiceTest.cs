@@ -143,6 +143,45 @@ namespace Sample.Tests.Services
             }
         }
 
+        /// <summary>
+        /// Tests the logic of searching the entites from the database based on a query filter
+        /// </summary>
+        /// <param name="property">Name of the Property</param>
+        [Theory]
+        [InlineData(nameof(User.Name))]
+        [InlineData(nameof(User.Login))]
+        [InlineData(nameof(User.TypeId))]
+        [InlineData(nameof(User.Password))]
+        public void Search_Users(string property)
+        {
+            var randomUser = _users.LastOrDefault();
+
+            var queryFilter = new QueryFilter()
+            {
+                Filters = new Dictionary<string, string>(),
+                Limit = 10,
+                Page = 1
+            };
+
+            queryFilter.AddFilter(property, randomUser.GetPropValue(property));
+
+            if (property == nameof(User.Password))
+            {
+                // Cannot search users based on its password
+                Assert.Throws<DomainException>(() =>
+                {
+                    _userService.Search(queryFilter);
+                });
+            }
+            else
+            {
+                var users = _userService.Search(queryFilter);
+
+                Assert.Contains(randomUser, users.Result);
+                Assert.DoesNotContain(users.Result, x => x.GetPropValue(property) != randomUser.GetPropValue(property));
+            }
+        }
+
         #endregion
 
         #region [ Private Methods ]
@@ -161,6 +200,12 @@ namespace Sample.Tests.Services
                 .Returns(() =>
                 {
                     return _users.Where(u => u.Active).AsQueryable();
+                });
+
+            userRepository.Setup(us => us.GetAll())
+                .Returns(() =>
+                {
+                    return _users.AsQueryable();
                 });
 
             userRepository.Setup(us => us.GetById(It.IsAny<int>()))

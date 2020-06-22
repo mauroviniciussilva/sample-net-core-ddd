@@ -87,7 +87,7 @@ namespace Sample.Service
                         break;
                     case string key when nameof(User.TypeId).Equals(key, StringComparison.InvariantCultureIgnoreCase):
                         int.TryParse(f.Value, out var typeId);
-                        query = query.Where(x => x.TypeId.Equals((EnumUserType)typeId));
+                        query = query.Where(x => x.TypeId.Equals((EnumUserType)typeId) || x.TypeId.ToString().Equals(f.Value, StringComparison.OrdinalIgnoreCase));
                         break;
                     case string key when nameof(User.Password).Equals(key, StringComparison.InvariantCultureIgnoreCase):
                         throw new DomainException(nameof(UserService), nameof(Search), "You cannot search users based on its passwords");

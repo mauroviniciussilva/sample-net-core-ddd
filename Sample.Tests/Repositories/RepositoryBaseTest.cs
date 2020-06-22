@@ -3,7 +3,6 @@ using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Repositories;
 using Sample.Infra.Data.Context;
 using Sample.Infra.Data.Repositories;
-using Sample.Infra.Data.Utils;
 using System;
 using System.Linq;
 using Xunit;

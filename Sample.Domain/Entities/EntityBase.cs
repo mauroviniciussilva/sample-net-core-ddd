@@ -63,7 +63,7 @@ namespace Sample.Domain.Entities
         public void AddError(string error)
         {
             Errors.Add(new DomainError(error));
-        }       
+        }
 
         /// <summary>
         /// Returns the domain erros of the entity.
@@ -113,8 +113,13 @@ namespace Sample.Domain.Entities
 
         public string GetPropValue(string propName)
         {
-            var teste = GetType().GetProperty(propName).GetValue(this).ToString();
-            return teste;
+            var value = string.Empty;
+
+            var prop = GetType().GetProperty(propName);
+            if (prop != null) 
+                value = prop.GetValue(this) == null? string.Empty : prop.GetValue(this).ToString();
+
+            return value;
         }
 
         #endregion
