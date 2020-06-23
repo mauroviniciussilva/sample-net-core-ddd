@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace Sample.Application.Filter
 {
+    /// <summary>
+    /// A model binder for gathering query params from a request
+    /// </summary>
     public class QueryFilterModelBinder : IModelBinder
     {
+        /// <summary>
+        /// Gather the QueryFilter based on the query filters from the request
+        /// </summary>
+        /// <param name="bindingContext">Binding Context</param>
+        /// <returns></returns>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext.ModelType != typeof(QueryFilter))

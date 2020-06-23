@@ -49,7 +49,7 @@ namespace Sample.Background
             {
                 configurator.SetServiceName("Sample.Background");
                 configurator.SetDisplayName("Sample.Background");
-                configurator.SetDescription("Servico de processamento de tarefas em background do Sample");
+                configurator.SetDescription("Sample background task processing service");
 
                 configurator.RunAsLocalSystem();
 

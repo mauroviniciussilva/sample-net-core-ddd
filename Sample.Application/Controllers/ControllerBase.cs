@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Services;
@@ -9,8 +10,8 @@ namespace Sample.Application.Controllers
 {
     [Authorize]
     [Route("Api/[controller]")]
-    [Route("{language:regex(^[[a-z]]{{2}}(?:-[[A-Z]]{{2}})?$)}/api/[controller]")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [Route("{language:regex(^[[a-z]]{{2}}(?:-[[A-Z]]{{2}})?$)}/Api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     public class ControllerBase<TEntity, TViewModelEdit, TViewModelList> : ControllerBase
         where TEntity : EntityBase
         where TViewModelEdit : class
@@ -18,7 +19,7 @@ namespace Sample.Application.Controllers
     {
         #region [ Properties ]
 
-        protected readonly IServiceBase<TEntity> _service;
+        private readonly IServiceBase<TEntity> _service;
         private readonly IMapper _mapper;
 
         #endregion
@@ -43,8 +44,10 @@ namespace Sample.Application.Controllers
         /// ]]>
         /// </remarks>
         /// <returns></returns>
+        [Produces("application/json")]
         [HttpGet]
-        public virtual ActionResult<IEnumerable<string>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public virtual ActionResult<IEnumerable<TViewModelList>> Get()
         {
             IEnumerable<TEntity> data = _service.GetAll();
 
@@ -58,8 +61,10 @@ namespace Sample.Application.Controllers
         /// </summary>
         /// <param name="id">Id of the Entity</param>
         /// <returns>The ViewModel of the Entity</returns>
+        [Produces("application/json")]
         [HttpGet("{id}")]
-        public virtual ActionResult GetById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public virtual ActionResult<TViewModelEdit> GetById(int id)
         {
             TEntity data = _service.GetById(id);
 
@@ -81,14 +86,16 @@ namespace Sample.Application.Controllers
         /// </remarks>
         /// <param name="filter">An object with the filter parameters</param>
         /// <returns>Object that contains a list of entities and the record count</returns>
+        [Produces("application/json")]
         [HttpGet("Search")]
-        public virtual ActionResult<IEnumerable<string>> Search([ModelBinder]QueryFilter filter)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public virtual ActionResult<SearchResultViewModel> Search([ModelBinder] QueryFilter filter)
         {
             var pagedResult = _service.Search(filter);
 
             var vwResult = _mapper.Map<IList<TViewModelList>>(pagedResult.Result);
 
-            return Ok(new { Result = vwResult, Count = pagedResult.RowCount });
+            return Ok(new SearchResultViewModel { Result = vwResult, Count = pagedResult.RowCount });
         }
 
         /// <summary>
@@ -96,8 +103,10 @@ namespace Sample.Application.Controllers
         /// </summary>
         /// <param name="viewModel">Entity's ViewModel</param>
         /// <returns>Entity's ViewModel after created</returns>
+        [Produces("application/json")]
         [HttpPost]
-        public virtual ActionResult Post([FromBody] TViewModelEdit viewModel)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public virtual ActionResult<TViewModelEdit> Post([FromBody] TViewModelEdit viewModel)
         {
             var entity = _mapper.Map<TEntity>(viewModel);
 
@@ -117,8 +126,10 @@ namespace Sample.Application.Controllers
         /// <param name="id">Entity's Id</param>
         /// <param name="viewModel">Entity's ViewModel</param>
         /// <returns>Entity's ViewModel after updated</returns>
+        [Produces("application/json")]
         [HttpPut("{id}")]
-        public virtual ActionResult Put(int id, [FromBody] TViewModelEdit viewModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public virtual ActionResult<TViewModelEdit> Put(int id, [FromBody] TViewModelEdit viewModel)
         {
             TEntity entity = _service.GetById(id);
 
@@ -143,7 +154,9 @@ namespace Sample.Application.Controllers
         /// Deletes a entity based on its id
         /// </summary>
         /// <param name="id">Entity's Id</param>
+        [Produces("application/json")]
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public virtual ActionResult Delete(int id)
         {
             TEntity entity = _service.GetById(id);
@@ -156,6 +169,29 @@ namespace Sample.Application.Controllers
             _service.DeleteById(id);
 
             return Ok();
+        }
+
+        #endregion
+
+        #region [ Helpers ]
+
+        /// <summary>
+        /// Result of the search API
+        /// </summary>
+        /// <remarks><![CDATA[
+        /// This class is being used only so that swagger can read the response type of the request to the Search method
+        /// ]]>
+        /// </remarks>        
+        public class SearchResultViewModel
+        {
+            /// <summary>
+            /// Filtered list of entities
+            /// </summary>
+            public IEnumerable<TViewModelList> Result { get; set; }
+            /// <summary>
+            /// Record count
+            /// </summary>
+            public int Count { get; set; }
         }
 
         #endregion

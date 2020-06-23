@@ -3,21 +3,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Sample.Application.Filter;
 using Sample.Application.Helpers;
 using Sample.Application.ViewModel;
 using Sample.Domain.Entities;
 using Sample.Domain.Interfaces;
 using Sample.Infra.CrossCutting.IoC;
-using Sample.Infra.Data.Context;
-using Sample.Infra.Data.Utils;
 using Sample.Infra.Logging;
+using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Sample.Application
@@ -35,18 +36,44 @@ namespace Sample.Application
             Configuration = builder.Build();
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Service Collection</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
+            services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(DomainExceptionFilter));
                 options.ModelBinderProviders.Insert(0, new ProviderModelBinder());
             });
 
             services.AddCors();
-            services.AddControllers();
             services.AddMemoryCache();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Sample .NET Core DDD",
+                    Description = "A .NET Core sample project based on DDD principles",
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://opensource.org/licenses/MIT")
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                c.CustomSchemaIds(type => type.Name.EndsWith("ViewModel") ? type.Name.Replace("ViewModel", string.Empty) : type.Name);
+            });
+
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
@@ -76,7 +103,6 @@ namespace Sample.Application
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-
             // Register User Helper 
             services.AddHttpContextAccessor();
             services.AddScoped<IUserHelper, UserHelper>();
@@ -92,9 +118,22 @@ namespace Sample.Application
             services.Configure<SampleSettings>(Configuration.GetSection("Settings"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">Application Builder</param>
+        /// <param name="env">Web Host Environment</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample API v1");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -18,7 +18,7 @@ namespace Sample.Background
         {
             if (!(_provider.GetRequiredService(bundle.JobDetail.JobType) is IJob job))
             {
-                throw new NotSupportedException($"{bundle.JobDetail.JobType.Name} não é suportado!");
+                throw new NotSupportedException($"{bundle.JobDetail.JobType.Name} is not suported!");
             }
 
             return job;
