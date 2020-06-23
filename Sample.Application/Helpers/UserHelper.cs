@@ -31,7 +31,7 @@ namespace Sample.Application.Helpers
 
 
                 if (id == null || name == null)
-                    throw new ExpiredUserException(nameof(UserIdentity), nameof(LoggedUser), "User needs to re-login.");
+                    throw new ExpiredUserException("User needs to re-login.");
 
                 _loggedUser = new UserIdentity(int.Parse(id.Value), name.Value);
 

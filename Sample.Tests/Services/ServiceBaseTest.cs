@@ -79,7 +79,7 @@ namespace Sample.Tests.Services
             if (id == 0)
             {
                 // Should return an error if the id passed is 0
-                Assert.Throws<DomainException>(() =>
+                Assert.Throws<ArgumentException>(() =>
                 {
                     _genericUserService.DeleteById(id);
                 });
@@ -99,7 +99,7 @@ namespace Sample.Tests.Services
             else
             {
                 // Should return an error if the id passed is not found
-                Assert.Throws<DomainException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     _genericUserService.DeleteById(id);
                 });
@@ -201,7 +201,7 @@ namespace Sample.Tests.Services
             else
             {
                 // Cannot search based on unknown properties
-                Assert.Throws<DomainException>(() =>
+                Assert.Throws<ArgumentException>(() =>
                 {
                     _genericUserService.Search(queryFilter);
                 });

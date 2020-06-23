@@ -36,7 +36,7 @@ namespace Sample.Service
         {
             if (GetByLogin(entity.Login) != null)
             {
-                throw new DomainException(nameof(UserService), nameof(Add), "Login already exists");
+                throw new ArgumentException("Login already exists");
             }
 
             return base.Add(entity);
@@ -53,7 +53,7 @@ namespace Sample.Service
 
             if (loginUser != null && loginUser.Id != entity.Id)
             {
-                throw new DomainException(nameof(UserService), nameof(Update), "Login is in use by another user");
+                throw new ArgumentException("Login is in use by another user");
             }
 
             return base.Update(entity);
@@ -90,7 +90,7 @@ namespace Sample.Service
                         query = query.Where(x => x.TypeId.Equals((EnumUserType)typeId) || x.TypeId.ToString().Equals(f.Value, StringComparison.OrdinalIgnoreCase));
                         break;
                     case string key when nameof(User.Password).Equals(key, StringComparison.InvariantCultureIgnoreCase):
-                        throw new DomainException(nameof(UserService), nameof(Search), "You cannot search users based on its passwords");
+                        throw new ArgumentException("You cannot search users based on its passwords");
                     // No default statement was placed because the inherited EntityBase properties will be handled by ServiceBase
                 }
             }

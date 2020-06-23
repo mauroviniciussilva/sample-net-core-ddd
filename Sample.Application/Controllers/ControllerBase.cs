@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Sample.Application.Response;
 using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Services;
+using System;
 using System.Collections.Generic;
 
 namespace Sample.Application.Controllers
@@ -43,10 +45,12 @@ namespace Sample.Application.Controllers
         /// I highly recommend you to take this method out of your code if you're going to deal with a large amount of registries
         /// ]]>
         /// </remarks>
-        /// <returns></returns>
+        /// <response code="200">Returns a list of entities</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult<IEnumerable<TViewModelList>> Get()
         {
             IEnumerable<TEntity> data = _service.GetAll();
@@ -60,15 +64,22 @@ namespace Sample.Application.Controllers
         /// A basic get by id API
         /// </summary>
         /// <param name="id">Id of the Entity</param>
-        /// <returns>The ViewModel of the Entity</returns>
+        /// <response code="200">Returns the requested entity</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult<TViewModelEdit> GetById(int id)
         {
-            TEntity data = _service.GetById(id);
+            TEntity entity = _service.GetById(id);
 
-            var vwResult = _mapper.Map<TViewModelEdit>(data);
+            if (entity == null)
+            {
+                throw new ArgumentException($"{typeof(TEntity).Name} not found");
+            }
+
+            var vwResult = _mapper.Map<TViewModelEdit>(entity);
 
             return Ok(vwResult);
         }
@@ -76,19 +87,19 @@ namespace Sample.Application.Controllers
         /// <summary>
         /// A search API that returns paged data.
         /// </summary>
-        /// <remarks><![CDATA[
-        /// The QueryFilter that is used in this route can be passed in the URI:
-        /// For example:
-        ///     Api/User/Search?Page=1&Limit=10&Active=true
-        ///     Api/User/Search?Page=1&Limit=10&UserCreationId=1
-        /// If the Page and the Limit are not informed, they default to 1 and 20, respectively
-        /// ]]>
+        /// <remarks>
+        /// The QueryFilter that is used in this route can be passed in the URI, for example:
+        ///     <para><![CDATA[Api/User/Search?Page=1&Limit=10&Active=true]]></para>
+        ///     <para><![CDATA[Api/User/Search?Page=1&Limit=10&UserCreationId=1]]></para>
+        /// <para>If the Page and the Limit are not informed, they default to 1 and 20, respectively</para>
         /// </remarks>
         /// <param name="filter">An object with the filter parameters</param>
-        /// <returns>Object that contains a list of entities and the record count</returns>
+        /// <response code="200">Returns an object that contains a list of entities and the record count</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpGet("Search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult<SearchResultViewModel> Search([ModelBinder] QueryFilter filter)
         {
             var pagedResult = _service.Search(filter);
@@ -102,16 +113,17 @@ namespace Sample.Application.Controllers
         /// A basic post API to add new registries to your database
         /// </summary>
         /// <param name="viewModel">Entity's ViewModel</param>
-        /// <returns>Entity's ViewModel after created</returns>
+        /// <response code="200">Returns the entity after created</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult<TViewModelEdit> Post([FromBody] TViewModelEdit viewModel)
         {
             var entity = _mapper.Map<TEntity>(viewModel);
 
-            if (!entity.IsValid())
-                return BadRequest(entity.GetErros());
+            entity.Validate();
 
             var result = _service.Add(entity);
 
@@ -125,23 +137,24 @@ namespace Sample.Application.Controllers
         /// </summary>
         /// <param name="id">Entity's Id</param>
         /// <param name="viewModel">Entity's ViewModel</param>
-        /// <returns>Entity's ViewModel after updated</returns>
+        /// <response code="200">Returns the entity after updated</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult<TViewModelEdit> Put(int id, [FromBody] TViewModelEdit viewModel)
         {
             TEntity entity = _service.GetById(id);
 
             if (entity == null)
             {
-                return NotFound();
+                throw new ArgumentException($"{typeof(TEntity).Name} not found");
             }
 
             var updatedEntity = _mapper.Map(viewModel, entity);
 
-            if (!updatedEntity.IsValid())
-                return BadRequest(entity.GetErros());
+            updatedEntity.Validate();
 
             var result = _service.Update(updatedEntity);
 
@@ -154,16 +167,19 @@ namespace Sample.Application.Controllers
         /// Deletes a entity based on its id
         /// </summary>
         /// <param name="id">Entity's Id</param>
+        /// <response code="200">The response is empty</response>
+        /// <response code="400">Returns an error object</response>
         [Produces("application/json")]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public virtual ActionResult Delete(int id)
         {
             TEntity entity = _service.GetById(id);
 
             if (entity == null)
             {
-                return NotFound();
+                throw new ArgumentException($"{typeof(TEntity).Name} not found");
             }
 
             _service.DeleteById(id);

@@ -54,7 +54,7 @@ namespace Sample.Domain.Entities
         /// Validates the entity.
         /// </summary>
         /// <returns></returns>
-        public abstract bool IsValid();
+        public abstract void Validate();
 
         /// <summary>
         /// Adds a domain error to the entity

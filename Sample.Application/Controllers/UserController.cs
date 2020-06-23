@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Application.Helpers;
+using Sample.Application.Response;
 using Sample.Application.ViewModel;
 using Sample.Domain.Entities;
 using Sample.Domain.Interfaces.Services;
@@ -42,36 +43,31 @@ namespace Sample.Application.Controllers
         [HttpPost("Login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(UserTokenViewModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(UserLoginErrorViewModel), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public IActionResult Authenticate([FromBody]UserLoginViewModel loginViewModel)
         {
-            try
+            var user = _userService.GetByLogin(loginViewModel.Login);
+
+            if (user == null)
             {
-                var user = _userService.GetByLogin(loginViewModel.Login);
-
-                if (user == null)
-                    return BadRequest(new UserLoginErrorViewModel { Message = "User not found" });
-
-                if (user.Password != loginViewModel.Password)
-                    return BadRequest(new UserLoginErrorViewModel { Message = "Invalid password" });
-
-                var token = TokenService.GenerateToken(user.Id, user.Name, "admin");
-
-                var tokenViewModel = new UserTokenViewModel
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Token = token,
-                    Login = user.Login,
-                    TypeId = user.TypeId
-                };
-
-                return Ok(tokenViewModel);
+                throw new ArgumentException($"User not found");
             }
-            catch (Exception ex)
+
+            if (user.Password != loginViewModel.Password)
+                throw new ArgumentException("Invalid password");
+
+            var token = TokenService.GenerateToken(user.Id, user.Name, "admin");
+
+            var tokenViewModel = new UserTokenViewModel
             {
-                return BadRequest(new UserLoginErrorViewModel() { Message = ex.Message });
-            }
+                Id = user.Id,
+                Name = user.Name,
+                Token = token,
+                Login = user.Login,
+                TypeId = user.TypeId
+            };
+
+            return Ok(tokenViewModel);
         }
 
         #endregion

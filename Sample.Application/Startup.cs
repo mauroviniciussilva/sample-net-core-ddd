@@ -16,6 +16,7 @@ using Sample.Domain.Interfaces;
 using Sample.Infra.CrossCutting.IoC;
 using Sample.Infra.Logging;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -44,9 +45,9 @@ namespace Sample.Application
         {
             services.AddControllers(options =>
             {
-                options.Filters.Add(typeof(DomainExceptionFilter));
+                options.Filters.Add(typeof(ErrorHandlingFilter));
                 options.ModelBinderProviders.Insert(0, new ProviderModelBinder());
-            });
+            }).ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
 
             services.AddCors();
             services.AddMemoryCache();
@@ -71,10 +72,30 @@ namespace Sample.Application
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
+                // Hiding the 'ViewModel' suffix in the Swagger UI
                 c.CustomSchemaIds(type => type.Name.EndsWith("ViewModel") ? type.Name.Replace("ViewModel", string.Empty) : type.Name);
+
+                // Defining authentication for requests in Swagger UI
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme{
+                            Reference = new OpenApiReference{
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },new List<string>()
+                    }
+                });
             });
 
-
+            // Authentication
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {
@@ -132,6 +153,7 @@ namespace Sample.Application
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample API v1");
+
             });
 
             if (env.IsDevelopment())

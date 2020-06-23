@@ -109,15 +109,4 @@ namespace Sample.Application.ViewModel
         /// </summary>
         public EnumUserType TypeId { get; set; }
     }
-
-    /// <summary>
-    /// The ViewModel that is returned when the login fails
-    /// </summary>
-    public class UserLoginErrorViewModel
-    {
-        /// <summary>
-        /// Error message
-        /// </summary>
-        public string Message { get; set; }
-    }
 }

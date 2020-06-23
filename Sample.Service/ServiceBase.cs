@@ -46,8 +46,7 @@ namespace Sample.Service
             if (entity.UserCreationId <= 0)
                 entity.UpdateUserCreationId(_userHelper.LoggedUser.Id);
 
-            if (!entity.IsValid())
-                throw new DomainException(nameof(ServiceBase<TEntity>), nameof(Add), "Invalid entity");
+            entity.Validate();
 
             entity = _repository.Add(entity);
 
@@ -67,12 +66,12 @@ namespace Sample.Service
         public void DeleteById(int id)
         {
             if (id == 0)
-                throw new DomainException(nameof(ServiceBase<TEntity>), nameof(DeleteById), "The ID can't be zero", nameof(TEntity));
+                throw new ArgumentException("The ID can't be zero");
 
             var entity = _repository.GetById(id);
 
             if (entity == null)
-                throw new DomainException(nameof(ServiceBase<TEntity>), nameof(DeleteById), "Entity not found", nameof(TEntity));
+                throw new ArgumentNullException($"{nameof(TEntity)} not found");
 
             entity.Inactivate(_userHelper.LoggedUser.Id);
             _repository.Update(entity);
@@ -152,7 +151,7 @@ namespace Sample.Service
                         var entityType = query.ElementType;
                         var propertyExists = entityType.GetProperty(f.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                         if (propertyExists == null)
-                            throw new DomainException(nameof(ServiceBase<TEntity>), nameof(Search), $"There is no property named \"{f.Key}\" on {entityType.Name}");
+                            throw new ArgumentException($"There is no property named \"{f.Key}\" on {entityType.Name}");
                         break;
                 }
             }
@@ -181,9 +180,7 @@ namespace Sample.Service
         public virtual TEntity Update(TEntity entity)
         {
             entity.UpdateEntity(_userHelper.LoggedUser.Id);
-
-            if (!entity.IsValid())
-                throw new DomainException(nameof(ServiceBase<TEntity>), nameof(Add), "Invalid entity");
+            entity.Validate();
 
             _repository.Update(entity);
 

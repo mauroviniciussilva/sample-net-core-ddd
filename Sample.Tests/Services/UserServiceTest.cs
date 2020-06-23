@@ -71,7 +71,7 @@ namespace Sample.Tests.Services
                 Assert.True(currentDateTime <= newUser.CreationDate);
                 Assert.True(newUser.Active);
                 // Must return an error when trying to add another user with the same login
-                Assert.Throws<DomainException>(() =>
+                Assert.Throws<ArgumentException>(() =>
                 {
                     var duplicatedUser = new User("Duplicated Login", userLogin, "password", EnumUserType.Administrator, _loggerUserId);
                     _userService.Add(duplicatedUser);
@@ -113,8 +113,8 @@ namespace Sample.Tests.Services
 
             if (login == "LoginInUse")
             {
-                // Should return an error if the IsValid() method finds any inconsistencies
-                Assert.Throws<DomainException>(() =>
+                // Should return an error if the login is already in use
+                Assert.Throws<ArgumentException>(() =>
                 {
                     var lastUser = _users.LastOrDefault();
                     lastUser.Login = user.Login;
@@ -123,7 +123,7 @@ namespace Sample.Tests.Services
             }
             if (login == null)
             {
-                // Should return an error if the IsValid() method finds any inconsistencies
+                // Should return an error if the Validate() method finds any inconsistencies
                 Assert.Throws<DomainException>(() =>
                 {
                     user.Login = login;
@@ -168,7 +168,7 @@ namespace Sample.Tests.Services
             if (property == nameof(User.Password))
             {
                 // Cannot search users based on its password
-                Assert.Throws<DomainException>(() =>
+                Assert.Throws<ArgumentException>(() =>
                 {
                     _userService.Search(queryFilter);
                 });

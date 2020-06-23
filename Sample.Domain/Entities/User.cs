@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Sample.Domain.Exceptions;
+using System;
+using System.Linq;
 
 namespace Sample.Domain.Entities
 {
@@ -23,7 +25,7 @@ namespace Sample.Domain.Entities
             TypeId = userType;
         }
 
-        public override bool IsValid()
+        public override void Validate()
         {
             if (string.IsNullOrEmpty(Name))
             {
@@ -45,7 +47,10 @@ namespace Sample.Domain.Entities
                 AddError("Creation date not defined");
             }
 
-            return Errors.Count == 0;
+            if (Errors.Any())
+            {
+                throw new DomainException(Errors.Select(e => e.Error));
+            }
         }
     }
 

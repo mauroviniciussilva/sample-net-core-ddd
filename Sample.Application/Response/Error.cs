@@ -1,70 +1,33 @@
-﻿namespace Sample.Application.Response
+﻿using System.Collections.Generic;
+
+namespace Sample.Application.Response
 {
     public class Error
     {
-        #region [ Properties ]
-
         /// <summary>
-        /// Error Code
+        /// Class that thrown the error
+        /// </summary>
+        public string Model { get; protected set; }
+        /// <summary>
+        /// Method that thrown the error
         /// </summary>
         public string Reference { get; private set; }
         /// <summary>
         /// Error Message
         /// </summary>
-        public string Message { get; private set; }
-
-        #endregion
-
-        #region [ Constructor ]
+        public IEnumerable<string> Messages { get; private set; }
 
         /// <summary>
-        /// Initializes an error instance with a code and message
+        /// Initializes an error instance with a model, reference and message
         /// </summary>
-        /// <param name="reference">Error Reference</param>
-        /// <param name="message">Error Message</param>
-        public Error(string reference, string message)
+        /// <param name="model">Class that thrown the error</param>
+        /// <param name="reference">Method that thrown the error</param>
+        /// <param name="messages">Error Messages</param>
+        public Error(string model, string reference, IEnumerable<string> messages)
         {
-            SetReference(reference);
-            SetMessage(message);
-        }
-
-        /// <summary>
-        /// Initializes an error instance with a message
-        /// </summary>
-        /// <param name="message">Error Message</param>
-        public Error(string message)
-        {
-            SetMessage(message);
-        }
-
-        #endregion
-
-        #region [ Methods ]
-
-        /// <summary>
-        /// Set the Code
-        /// </summary>
-        /// <param name="reference">Code</param>
-        private void SetReference(string reference)
-        {
+            Model = model;
             Reference = reference;
+            Messages = messages;
         }
-
-        /// <summary>
-        /// Set the Message
-        /// </summary>
-        /// <param name="message">Message</param>
-        private void SetMessage(string message)
-        {
-            Message = message;
-        }
-
-        /// <summary>
-        /// Returns the error message
-        /// </summary>
-        /// <returns>Error Message</returns>
-        public override string ToString() => Message;
-
-        #endregion
     }
 }
