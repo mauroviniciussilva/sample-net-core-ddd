@@ -1,19 +1,19 @@
 ## Introduction
 
-First of all, as you must know, DDD is not an architecture. DDD (Domain Driven Design) is a software modeling whose objective is to facilitate the implementation of complex rules and processes, where it aims to divide responsibilities by layers and is independent of the technology used. Knowing this concept, I present an architecture that can be used as a basis for building an API (Application Programming Interface) using .NET Core 3.1.
+First of all, as you must know, DDD is not an architecture. DDD (Domain Driven Design) is a software modeling whose objective is to facilitate the implementation of complex rules and processes, where it aims to divide responsibilities by layers and is independent of the technology used. Knowing this concept, I present an architecture that can be used as a basis for building an API (Application Programming Interface) using .NET Core 3.1 with Entity Framework Core.
 
 ## The Architeture
 
 ![Architeture of the project](docs/Project_Architeture.PNG)
 
-- Application layer: where API controllers will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action.
-- Background: responsible for the background jobs and processing, where you can program tasks to execute in a time interval or even integrate with a message-broker.
-- Domain layer: This layer is the basis of the entire DDD-based project. This is where we need to properly define our business model in terms of classes, and all the key logic and business rules lies in the domain layer.
-- Infrastructure layer: divided into three sub-layers
-    - Data: performs the persistence with the database.
-    - Cross-Cutting: a separate layer that does not obey the layer hierarchy. As its name says, this layer crosses the entire hierarchy. It contains the functionalities that can be used in any part of the code, such as documents validation, consumption of external API and use of some security.
-    - Logging: responsible to make logs to the application.
-- Service layer: responsible for orchestrating calls to the domain layer, where it is possible to make some validations and request data from repositories to return to the application layer.
+- **Application Layer**: where API controllers will be developed. It has the function of receiving all requests and directing them to a service to perform a certain action.
+- **Background**: responsible for the background jobs and processing, where you can program tasks to execute in a time interval or even integrate with a message-broker.
+- **Domain Layer**: This layer is the basis of the entire DDD-based project. This is where we need to properly define our business model in terms of classes, and all the key logic and business rules lies in the domain layer.
+- **Infrastructure Layer**: divided into three sub-layers
+    - **Data**: performs the persistence with the database.
+    - **Cross-Cutting**: a separate layer that does not obey the layer hierarchy. As its name says, this layer crosses the entire hierarchy. It contains the functionalities that can be used in any part of the code, such as documents validation, consumption of external API and use of some security.
+    - **Logging**: responsible to make logs to the application.
+- **Service Layer**: responsible for orchestrating calls to the domain layer, where it is possible to make some validations and request data from repositories to return to the application layer.
 
 ## Generic Classes
 
@@ -48,4 +48,10 @@ It is possible to test the APIs through Postman. I left a collection and an envi
 
 You will find the files in:
 
-- sample-net-core-ddd\Postman
+- `sample-net-core-ddd\Postman`
+
+## Documentation
+
+The project documentation was made with [Swashbuckle](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.1&tabs=visual-studio), an open source project for generating [Swagger](https://swagger.io/) documents for ASP.NET Core Web APIs. The project was configured to open Swagger UI when you start the application in development environment. If for some reason the swagger interface is not opened when starting the project, you can access it via the following path:
+
+- `http://localhost<port>/swagger/index.html`
